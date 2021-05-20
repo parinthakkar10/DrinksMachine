@@ -38,6 +38,15 @@ namespace Drinks_Machine.Controllers
         public static int quarter_count = 25;
 
         public static int quarterValue = 25;
+
+        public int changePenny = 0;
+
+        public int changeCents = 0;
+
+        public int changeNickel = 0;
+
+        public int changeQuarter = 0;
+
         public DrinksController()
         {
             drinksList.Add("Coke", coke_count);
@@ -68,13 +77,30 @@ namespace Drinks_Machine.Controllers
             int cokeQty = drinksModel.CokeQty;
             int pepsiQty = drinksModel.PepsiQty;
             int sodaQty = drinksModel.SodaQty;
+
+            int chngPenny = drinksModel.ChangePenny;
+            int chngCents = drinksModel.ChangeCents;
+            int chngNickel = drinksModel.ChangeNickel;
+            int chngQuarter = drinksModel.ChangeQuarter;
+
+            changePenny = chngPenny;
+            changeCents = chngCents;
+            changeNickel = chngNickel;
+            changeQuarter = chngQuarter;
+
             coke_count -= cokeQty;
             pepsi_count -= pepsiQty;
             soda_count -= sodaQty;
-            cents_count -= drinksModel.Cents;
-            penny_count -= drinksModel.Penny;
-            nickel_count -= drinksModel.Nickels;
-            quarter_count -= drinksModel.Quarter;
+            cents_count += drinksModel.Cents;
+            penny_count += drinksModel.Penny;
+            nickel_count += drinksModel.Nickels;
+            quarter_count += drinksModel.Quarter;
+
+            cents_count -= changeCents;
+            penny_count -= changePenny;
+            nickel_count -= changeNickel;
+            quarter_count -= changeQuarter;
+
             return RedirectToAction("Index");
         }
     }

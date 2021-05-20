@@ -18,6 +18,7 @@
                             @Html.TextBoxFor(m => m.Cents, new { @id = "txtCents", @class = "form-control" })
                             @Html.HiddenFor(m => m.CentsValue, new { @id = "hdnCentsValue" })
                             <small>@Model.DrinksList.GetValueOrDefault("Cents") cents (dime) available, Each Value = @Model.CentsValue</small>
+                            @Html.HiddenFor(m => m.ChangeCents, new { @id = "hdnChangeCents" , @Value = 0})
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -26,6 +27,7 @@
                             @Html.TextBoxFor(m => m.Penny, new { @id = "txtPenny", @class = "form-control" })
                             @Html.HiddenFor(m => m.PennyValue, new { @id = "hdnPennyValue" })
                             <small>@Model.DrinksList.GetValueOrDefault("Penny") penny available, Each Value = @Model.PennyValue</small>
+                            @Html.HiddenFor(m => m.ChangePenny, new { @id = "hdnChangePenny", @Value = 0 })
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -34,6 +36,7 @@
                             @Html.TextBoxFor(m => m.Nickels, new { @id = "txtNickels", @class = "form-control" })
                             @Html.HiddenFor(m => m.NickelsValue, new { @id = "hdnNickelsValue" })
                             <small>@Model.DrinksList.GetValueOrDefault("Nickels") nickels available, Each Value = @Model.NickelsValue</small>
+                            @Html.HiddenFor(m => m.ChangeNickel, new { @id = "hdnChangeNickel", @Value = 0 })
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -42,6 +45,7 @@
                             @Html.TextBoxFor(m => m.Quarter, new { @id = "txtQuarter", @class = "form-control" })
                             @Html.HiddenFor(m => m.QuarterValue, new { @id = "hdnQuarterValue" })
                             <small>@Model.DrinksList.GetValueOrDefault("Quarter") quarter available, Each Value = @Model.QuarterValue</small>
+                            @Html.HiddenFor(m => m.ChangeQuarter, new { @id = "hdnChangeQuarter", @Value = 0 })
                         </div>
                     </div>
                 </div>
@@ -230,6 +234,36 @@
             return false;
         }
 
+        var change = coinTotal - drinksTotal;
+        var changePenny = 0, changeNickel = 0, changeCents = 0, changeQuarter = 0;
+        if (change > 0) {
+            while (change != 0) {
+                if (change >= 25) {
+                    changeQuarter = Math.floor(change / 25);
+                    change = change % 25;
+                }
+                else if (change >= 10) {
+                    changeCents = Math.floor(change / 10);
+                    change = change % 10;
+                }
+                else if (change >= 5) {
+                    changeNickel = Math.floor(change / 5);
+                    change = change % 5;
+                }
+                else if (change >= 1) {
+                    changePenny = change;
+                    change = 0;
+                }
+                else {
+                    change = 0;
+                }
+            }
+            $("#hdnChangeCents").val(changeCents);
+            $("#hdnChangePenny").val(changePenny);
+            $("#hdnChangeNickel").val(changeNickel);
+            $("#hdnChangeQuarter").val(changeQuarter);
+        }
+
         var strOrderedDrinks = "";
         var totalQty = parseInt(cokeQty) + parseInt(pepsiQty) + parseInt(sodaQty);
         strOrderedDrinks += "<tr><th>Drinks</th><th>Quantity</th><th>Total</th></tr>";
@@ -244,6 +278,7 @@
         }
         strOrderedDrinks += "<tr><td></td><td></td><td></td></tr>";
         strOrderedDrinks += "<tr><td>Total</td><td>" + totalQty + "</td><td>" + coinTotal + "</td></tr>";
+        strOrderedDrinks += "<tr><td>Change</td><td></td><td>" + (coinTotal - drinksTotal) + "</td></tr>";
         $("#tblOrderedDrinks").html(strOrderedDrinks);
         $("#myModal").modal('show');
         

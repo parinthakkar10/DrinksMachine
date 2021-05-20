@@ -26,6 +26,10 @@ namespace Drinks_Machine.Models
         public int Nickels { get; set; }
         public int QuarterValue { get; set; }
         public int Quarter { get; set; }
+        public int ChangeCents { get; set; }
+        public int ChangePenny { get; set; }
+        public int ChangeNickel { get; set; }
+        public int ChangeQuarter { get; set; }
         public Dictionary<string, int> DrinksList { get; set; }
     }
 }
