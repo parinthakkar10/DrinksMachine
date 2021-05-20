@@ -1,0 +1,270 @@
+﻿@model Drinks_Machine.Models.Drinks
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container-fluid">
+    <form asp-controller="Drinks" asp-action="Purchase" method="post">
+        <div class="card">
+            <div class="card-header">
+                <h3>COINS INFORMATION</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="txtCents">Cents (Dime)</label>
+                            @Html.TextBoxFor(m => m.Cents, new { @id = "txtCents", @class = "form-control" })
+                            @Html.HiddenFor(m => m.CentsValue, new { @id = "hdnCentsValue" })
+                            <small>@Model.DrinksList.GetValueOrDefault("Cents") cents (dime) available, Each Value = @Model.CentsValue</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="txtPenny">Penny</label>
+                            @Html.TextBoxFor(m => m.Penny, new { @id = "txtPenny", @class = "form-control" })
+                            @Html.HiddenFor(m => m.PennyValue, new { @id = "hdnPennyValue" })
+                            <small>@Model.DrinksList.GetValueOrDefault("Penny") penny available, Each Value = @Model.PennyValue</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="nickels_txt">Nickels</label>
+                            @Html.TextBoxFor(m => m.Nickels, new { @id = "txtNickels", @class = "form-control" })
+                            @Html.HiddenFor(m => m.NickelsValue, new { @id = "hdnNickelsValue" })
+                            <small>@Model.DrinksList.GetValueOrDefault("Nickels") nickels available, Each Value = @Model.NickelsValue</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="txtQuarter">Quarter</label>
+                            @Html.TextBoxFor(m => m.Quarter, new { @id = "txtQuarter", @class = "form-control" })
+                            @Html.HiddenFor(m => m.QuarterValue, new { @id = "hdnQuarterValue" })
+                            <small>@Model.DrinksList.GetValueOrDefault("Quarter") quarter available, Each Value = @Model.QuarterValue</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-header">
+                <h3>PRODUCTS INFORMATION</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="txtCokeQty" class="col-md-8 col-form-label">
+                                Coke<small id="coke_decs" class="form-text text-muted">
+
+                                    <input type="hidden" id="hdnCokeQty" value="@Model.DrinksList.GetValueOrDefault("Coke").ToString()" />
+                                    @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Coke").ToString()) > 0)
+                                    {
+                                        <span>@Model.DrinksList.GetValueOrDefault("Coke").ToString() drinks available, Cost = 25</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No Drinks Available.</span>
+                                    }
+                                </small>
+                            </label>
+                            <div class="col-md-4">
+                                @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Coke").ToString()) > 0)
+                                {
+                                    @Html.TextBoxFor(m => m.CokeQty, new { @id = "txtCokeQty", @class = "form-control", @style = "margin-top:10px;", @onchange = "CalculateOrderTotal();" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.CokeQty, new { @id = "txtCokeQty", @class = "form-control", @style = "margin-top:10px;", @readonly = "readonly" })
+                                }
+                                @Html.HiddenFor(m => m.CokeValue, new { @id = "hdnCokeValue" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="txtPepsiQty" class="col-md-8 col-form-label">
+                                Pepsi<small id="pepsi_decs" class="form-text text-muted">
+                                    <input type="hidden" id="hdnPepsiQty" value="@Model.DrinksList.GetValueOrDefault("Pepsi").ToString()" />
+                                    @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Pepsi").ToString()) > 0)
+                                    {
+                                        <span>@Model.DrinksList.GetValueOrDefault("Pepsi").ToString() drinks available, Cost = 36</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No Drinks Available.</span>
+                                    }
+                                </small>
+                            </label>
+                            <div class="col-md-4">
+                                @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Pepsi").ToString()) > 0)
+                                {
+                                    @Html.TextBoxFor(m => m.PepsiQty, new { @id = "txtPepsiQty", @class = "form-control", @style = "margin-top:10px;", @onchange = "CalculateOrderTotal();" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.PepsiQty, new { @id = "txtPepsiQty", @class = "form-control", @style = "margin-top:10px;", @readonly = "readonly" })
+                                }
+                                @Html.HiddenFor(m => m.PepsiValue, new { @id = "hdnPepsiValue" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="txtSodaQty" class="col-md-8 col-form-label">
+                                Soda<small id="soda_decs" class="form-text text-muted">
+                                    <input type="hidden" id="hdnCokeQty" value="@Model.DrinksList.GetValueOrDefault("Soda").ToString()" />
+                                    @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Soda").ToString()) > 0)
+                                    {
+                                        <span>@Model.DrinksList.GetValueOrDefault("Soda").ToString() drinks available, Cost = 45</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No Drinks Available.</span>
+                                    }
+                                </small>
+                            </label>
+                            <div class="col-md-4">
+                                @if (Convert.ToInt32(Model.DrinksList.GetValueOrDefault("Soda").ToString()) > 0)
+                                {
+                                    @Html.TextBoxFor(m => m.SodaQty, new { @id = "txtSodaQty", @class = "form-control", @style = "margin-top:10px;", @onchange = "CalculateOrderTotal();" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.SodaQty, new { @id = "txtSodaQty", @class = "form-control", @style = "margin-top:10px;", @readonly = "readonly" })
+                                }
+                                @Html.HiddenFor(m => m.SodaValue, new { @id = "hdnSodaValue" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" style="margin:auto 0;">
+                        <div class="form-group row">
+                            <label for="total_txt" class="col-md-6 col-form-label">ORDER TOTAL</label>
+                            <div class="col-md-6">
+                                <input type="text" readonly class="form-control" id="total_txt" name="total_txt">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-right">
+
+                        <button type="button" class="btn btn-primary" onclick="CheckValidation();">GET DRINKS</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-primary" style="display:none;">Get Drinks</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Your Order</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <table id="tblOrderedDrinks" class="table table-bordered">
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="modalOkClick();">Ok</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function CheckValidation() {
+        if (parseInt($("#txtCokeQty").val()) <= 0 && parseInt($("#txtPepsiQty").val()) <= 0 && parseInt($("#txtSodaQty").val()) <= 0) {
+            alert('Please Add Atleast 1 Quantity To Any Drink.');
+            return false;
+        }
+        else if (parseInt($("#txtCokeQty").val()) > 0 && parseInt($("#hdnCokeQty").val()) <= 0) {
+            alert('Coke Is Not Available');
+            return false;
+        }
+        else if (parseInt($("#txtPepsiQty").val()) > 0 && parseInt($("#hdnPepsiQty").val()) <= 0) {
+            alert('Pepsi Is Not Available');
+            return false;
+        }
+        else if (parseInt($("#txtSodaQty").val()) > 0 && parseInt($("#hdnSodaQty").val()) <= 0) {
+            alert('Soda Is Not Available');
+            return false;
+        }
+        if (parseInt($("#txtCents").val()) <= 0 && parseInt($("#txtPenny").val()) <= 0 && parseInt($("#txtNickels").val()) <= 0 && parseInt($("#txtQuarter").val()) <= 0) {
+            alert('Please Fill Up Coins Information.');
+            return false;
+        }
+        var cokeQty = $("#txtCokeQty").val();
+        var cokeValue = $("#hdnCokeValue").val();
+        var cokeTotal = parseInt(cokeQty) * parseInt(cokeValue);
+        var pepsiQty = $("#txtPepsiQty").val();
+        var pepsiValue = $("#hdnPepsiValue").val();
+        var pepsiTotal = parseInt(pepsiQty) * parseInt(pepsiValue);
+        var sodaQty = $("#txtSodaQty").val();
+        var sodaValue = $("#hdnSodaValue").val();
+        var sodaTotal = parseInt(sodaQty) * parseInt(sodaValue);
+
+        var drinksTotal = cokeTotal + pepsiTotal + sodaTotal;
+        //alert(drinksTotal);
+        var cents = $("#txtCents").val();
+        var centsValue = $("#hdnCentsValue").val();
+        var centsTotal = parseInt(cents) * parseInt(centsValue);
+        var penny = $("#txtPenny").val();
+        var pennyValue = $("#hdnPennyValue").val();
+        var pennyTotal = parseInt(penny) * parseInt(pennyValue);
+        var nickels = $("#txtNickels").val();
+        var nickelsValue = $("#hdnNickelsValue").val();
+        var nickelsTotal = parseInt(nickels) * parseInt(nickelsValue);
+        var quarter = $("#txtQuarter").val();
+        var quarterValue = $("#hdnQuarterValue").val();
+        var quarterTotal = parseInt(quarter) * parseInt(quarterValue);
+
+        var coinTotal = centsTotal + pennyTotal + nickelsTotal + quarterTotal;
+        //alert(coinTotal);
+        if (drinksTotal > coinTotal) {
+            alert('Please Add Coins To Match Order Total Amount');
+            return false;
+        }
+
+        var strOrderedDrinks = "";
+        var totalQty = parseInt(cokeQty) + parseInt(pepsiQty) + parseInt(sodaQty);
+        strOrderedDrinks += "<tr><th>Drinks</th><th>Quantity</th><th>Total</th></tr>";
+        if (cokeQty > 0) {
+            strOrderedDrinks += "<tr><td>Coke</td><td>" + cokeQty + "</td><td>" + cokeTotal + "</td></tr>";
+        }
+        if (pepsiQty > 0) {
+            strOrderedDrinks += "<tr><td>Pepsi</td><td>" + pepsiQty + "</td><td>" + pepsiTotal + "</td></tr>";
+        }
+        if (sodaQty > 0) {
+            strOrderedDrinks += "<tr><td>Soda</td><td>" + sodaQty + "</td><td>" + sodaTotal + "</td></tr>";
+        }
+        strOrderedDrinks += "<tr><td></td><td></td><td></td></tr>";
+        strOrderedDrinks += "<tr><td>Total</td><td>" + totalQty + "</td><td>" + coinTotal + "</td></tr>";
+        $("#tblOrderedDrinks").html(strOrderedDrinks);
+        $("#myModal").modal('show');
+        
+    }
+
+    function CalculateOrderTotal() {
+        var cokeQty = $("#txtCokeQty").val();
+        var cokeValue = $("#hdnCokeValue").val();
+        var cokeTotal = parseInt(cokeQty) * parseInt(cokeValue);
+        var pepsiQty = $("#txtPepsiQty").val();
+        var pepsiValue = $("#hdnPepsiValue").val();
+        var pepsiTotal = parseInt(pepsiQty) * parseInt(pepsiValue);
+        var sodaQty = $("#txtSodaQty").val();
+        var sodaValue = $("#hdnSodaValue").val();
+        var sodaTotal = parseInt(sodaQty) * parseInt(sodaValue);
+
+        var drinksTotal = cokeTotal + pepsiTotal + sodaTotal;
+        $("#total_txt").val(drinksTotal);
+    }
+
+    function modalOkClick() {
+        $("#btnSubmit").click();
+    }
+</script>
